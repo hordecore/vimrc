@@ -17,13 +17,10 @@ set history=50                          "сохранять 50 строк в и�
 set ruler                               "постоянно показывать позицию курсора
 set incsearch                           "показывать первое совпадение при наборе шаблона
 set nohlsearch                          "подсветка найденного
-set mouse=a                             "используем мышку
 set autoindent                          "включаем умные отступы
 set smartindent
 set ai                                  "при начале новой строки, отступ копируется из предыдущей
 set ignorecase                          "игнорируем регистр символов при поиске
-"set background=dark                     "фон терминала - темный
-"set ttyfast                             "коннект с терминалом быстрый
 set visualbell                          "мигаем вместо пищания
 set showmatch                           "показываем открывающие и закрывающие скобки
 set shortmess+=tToOI                    "убираем заставку при старте
@@ -39,8 +36,6 @@ set termencoding=utf8                   "Кодировка вывода на т
 set fileencodings=utf8,cp1251,koi8r     "Возможные кодировки файлов (автоматическая перекодировка)
 set showcmd showmode                    "показывать незавершенные команды и текущий режим
 set autochdir                           "текущий каталог всегда совпадает с содержимым активного окна
-"set stal=2                              "постоянно выводим строку с табами
-"set tpm=100                             "максимальное количество открытых табов
 set wak=yes                             "используем ALT как обычно, а не для вызова пункта мени
 set dir=~/.vim/swapfiles                "каталог для сохранения своп-файлов
 set noex                                "не читаем файл конфигурации из текущей директории
@@ -198,26 +193,6 @@ menu NewProj.C++ :!cp -r ~/.vim/mproj/c++/* .<CR>:e ./src/main.cpp<CR>
 menu NewProj.C :!cp -r ~/.vim/mproj/c/* .<CR>:e ./main.c<CR>
 menu NewProj.LaTeX :!cp -r ~/.vim/mproj/latex/* .<CR>:e ./report.tex<CR>
 "map <C-c>np :emenu NewProj.<TAB>
-
-"Add existing project to project tree
-"Works through ass, but WORKS!
-function! ProjectAdd()
-    let s:pproj_name=inputdialog('Enter the name of new project: ')
-    if strlen(s:pproj_name) == 0
-        return
-    endif
-    let s:pproject_str_wcwd=s:pproj_name . "=" . getcwd() . " CD=. filter=\"*\" {"
-    "for calc this variable now
-    silent echo s:pproject_str_wcwd
-    Project
-    let s:pendln=line("$")
-    call setline(s:pendln+1, s:pproject_str_wcwd)
-    call setline(s:pendln+2, "}")
-    unlet s:pendln
-    unlet s:pproject_str_wcwd
-    unlet s:pproj_name
-endfunction
-map <C-c>add :execute ProjectAdd()<CR>
 
 "Вставляем свой заголовок в файл
 function FileHeader()
