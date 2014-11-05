@@ -1,13 +1,3 @@
-" просматриваем ман-страницы в отдельном окне vim'a с подсвечиванием и т.п.
-" Эта директива должна быть в начале файла .vimrc, иначе она перезапишет
-" остальные настройки.
-"-------------------------------------------------------------------------
-" :Man man
-"-------------------------------------------------------------------------
-" Local mappings:
-" CTRL-] Jump to the manual page for the word under the cursor.
-" CTRL-T Jump back to the previous manual page.
-
 :runtime! ftplugin/man.vim
 
 "-------------------------------------------------------------------------------------------------------
@@ -35,47 +25,18 @@ set encoding=utf8                       "кодировка по дефолту
 set termencoding=utf8                   "Кодировка вывода на терминал
 set fileencodings=utf8,cp1251,koi8r     "Возможные кодировки файлов (автоматическая перекодировка)
 set showcmd showmode                    "показывать незавершенные команды и текущий режим
-set autochdir                           "текущий каталог всегда совпадает с содержимым активного окна
 set wak=yes                             "используем ALT как обычно, а не для вызова пункта мени
 set dir=~/.vim/swapfiles                "каталог для сохранения своп-файлов
 set noex                                "не читаем файл конфигурации из текущей директории
 set ssop+=resize                        "сохраняем в сессии размер окон Vim'а
-"set list                                "Отображаем табуляции и конечные пробелы...
 set listchars=tab:→→,trail:⋅
 
 "-------------------------------------------------------------------------------------
 
-colorscheme ron "цветовая схема для терминала
+colorscheme ron 			"цветовая схема для терминала
 syntax on                               "включаем подсветку синтаксиса
 filetype plugin indent on               "включаем автообнаружение типа файла
-
-if has ("gui_running")
-    "убираем меню и тулбар
-    set guioptions-=m
-    set guioptions-=T
-    "убираем скроллбары
-    set guioptions-=r
-    set guioptions-=l
-    "используем консольные диалоги вместо графических
-    set guioptions+=c
-    "антиалиасинг для шревтоф
-    set antialias
-    "прячем курсор
-    set mousehide
-    "Так не выводятся ненужные escape последовательности в :shell
-    set noguipty
-    "подсветка текущей строки
-    set cursorline
-    "font
-    set guifont=Terminus
-    "используем эту цветовую схему
-    colorscheme darkspectrum
-endif
-
-"Don't use Ex mode, use Q for formatting
 map Q gq
-
-"---------------------------------------------------------------------------------------------------
 
 autocmd FileType text setlocal textwidth=80 "устанавливаем ширину в 80 знаков для текстовых файлов
 au FileType c,cc,h,sh au BufWinEnter * let w:m1=matchadd('ErrorMsg', '\%>80v.\+', -1) "Подсвечиваем 81 символ и т.д.
@@ -110,33 +71,20 @@ let g:Tlist_Auto_Highlight_Tag=1                    " подсвечивать �
 "-----------------------------------------------------------------------------
 
 " Несколько удобных биндингов для С
-au FileType c,cc,h inoremap {<CR> {<CR>}<Esc>O
 au FileType c,cc,h inoremap #m int main(int argc, char * argv[]) {<CR>return 0;<CR>}<CR><Esc>2kO
 au FileType c,cc,h inoremap #d #define 
-au FileType c,cc,h inoremap #e #endif /*  */<Esc>hhi
-au FileType c,cc,h inoremap #" #include ""<Esc>i
+au FileType c,cc,h inoremap #el #else<Esc>i
+au FileType c,cc,h inoremap #en #endif<Esc>hhi
+au FileType c,cc,h inoremap #in #include <Esc>i
+au FileType c,cc,h inoremap #ifd #ifdef <Esc>i
+au FileType c,cc,h inoremap #ifn #ifndef <Esc>i
 au FileType c,cc,h inoremap #< #include <><Esc>i
-au FileType c,cc,h inoremap #f /* FIXME:  */<Esc>hhi
-au FileType c,cc,h inoremap #t /*TODO:  */<Esc>hhi
 au FileType c,cc,h inoremap ;; <END>;<CR>
-au FileType c,cc,h inoremap " ""<Left>
-au FileType c,cc,h inoremap ' ''<Left>
-au FileType c,cc,h inoremap ( ()<Left>
-au FileType c,cc,h inoremap [ []<Left>
-au FileType c,cc,h inoremap (; ();<CR>
-au FileType c,cc,h inoremap ({ () {<CR>}<Esc>O
-au FileType c,cc,h inoremap /*<Space> /*  */<Esc>3ha
-" Биндинги для LaTeX
-au FileType tex inoremap %- %---------------------------------------------------------------------------<CR>
-au FileType tex inoremap %= %===========================================================================<CR>
-au FileType tex inoremap { {}<Left>
-au FileType tex inoremap \bei \begin{itemize}<CR>
-au FileType tex inoremap \ei \end{itemize}<CR>
-au FileType tex inoremap \bee \begin{enumerate}<CR>
-au FileType tex inoremap \ee \end{enumerate}<CR>
-au FileType tex inoremap \it \item 
-
 "----------------------------------------------------------------------------------------------"
+au FileType sh inoremap #! #!/bin/bash<Esc>i
+au FileType sh inoremap while while; do<END><CR><END><CR>done<Esc>kklli
+au FileType sh inoremap case case in<END><CR>)<END><CR>;;<END><CR>)<END><CR>;;<END><CR>esac<Esc>kkkkkli
+au FileType sh inoremap () () {<END><CR><END><CR>}<Esc>ki
 
 " Close buffer without saving
 map <Esc><Esc> :q!<CR>
@@ -172,6 +120,7 @@ nmap <C-c>ss :setlocal spell spelllang=<CR>
 "map  <C-c>sm :emenu Spl.<TAB>
 
 " Compile programs using Makefile (and do not jump to first error)
+"
 au FileType c,cc,h,s imap <C-c>m <Esc>:make!<CR>a
 au FileType c,cc,h,s nmap <C-c>m :make!<CR>
 " Use LaTeX to compile LaTeX sources
@@ -187,32 +136,6 @@ nmap <silent> <C-c>p <Plug>ToggleProject
 " work with taglist
 imap <C-c>t <Esc>:TlistToggle<CR>:TlistUpdate<CR>
 nmap <C-c>t :TlistToggle<CR>:TlistUpdate<CR>
-
-" Create new project
-menu NewProj.C++ :!cp -r ~/.vim/mproj/c++/* .<CR>:e ./src/main.cpp<CR>
-menu NewProj.C :!cp -r ~/.vim/mproj/c/* .<CR>:e ./main.c<CR>
-menu NewProj.LaTeX :!cp -r ~/.vim/mproj/latex/* .<CR>:e ./report.tex<CR>
-"map <C-c>np :emenu NewProj.<TAB>
-
-"Вставляем свой заголовок в файл
-function FileHeader()
-    let s:num=0
-    let s:filename=" * @file " . bufname("%")
-    "strftime format only for Unix - not portable
-    let s:currdate=" * @date " . strftime("%d %B %Y %X")
-    call append(s:num,"/**")
-    call append(s:num+1,s:filename)
-    call append(s:num+2," * @brief")
-    call append(s:num+3," * @author h0rr0rr_drag0n <h0rr0rr_drag0n@vindekapets.ru")
-    call append(s:num+4,s:currdate)
-    call append(s:num+5," *")
-    call append(s:num+6," * ")
-    call append(s:num+7," */")
-    unlet s:num
-    unlet s:filename
-    unlet s:currdate
-endfunction
-map <C-c>h :execute FileHeader()<CR>
 
 "переключаемся между соответствующими *.c и *.h файлами
 "в текущем каталоге (a.vim)
